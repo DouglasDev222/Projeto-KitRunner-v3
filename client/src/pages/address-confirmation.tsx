@@ -114,16 +114,46 @@ export default function AddressConfirmation() {
     // Store address and calculate delivery costs
     sessionStorage.setItem('selectedAddress', JSON.stringify(address));
     
-    // Mock delivery calculation - would be replaced with real API
-    const mockDeliveryPrice = Math.random() * 20 + 10; // Random between 10-30
-    const mockDistance = Math.random() * 15 + 5; // Random between 5-20 km
-    
-    const calculatedCosts = {
-      deliveryPrice: Number(mockDeliveryPrice.toFixed(2)),
-      distance: Number(mockDistance.toFixed(1))
+    // Calculate real delivery costs based on ZIP codes
+    const calculateDeliveryCosts = async () => {
+      try {
+        const response = await fetch("/api/delivery/calculate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            customerId: customer?.id,
+            eventId: parseInt(id!),
+            kitQuantity: 1,
+            customerZipCode: address.zipCode
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const calculatedCosts = {
+            deliveryPrice: data.deliveryCost,
+            distance: data.distance
+          };
+          sessionStorage.setItem('calculatedCosts', JSON.stringify(calculatedCosts));
+        } else {
+          // Fallback to default values if API fails
+          const calculatedCosts = {
+            deliveryPrice: 18.50,
+            distance: 12.5
+          };
+          sessionStorage.setItem('calculatedCosts', JSON.stringify(calculatedCosts));
+        }
+      } catch (error) {
+        // Fallback to default values if request fails
+        const calculatedCosts = {
+          deliveryPrice: 18.50,
+          distance: 12.5
+        };
+        sessionStorage.setItem('calculatedCosts', JSON.stringify(calculatedCosts));
+      }
     };
-    
-    sessionStorage.setItem('calculatedCosts', JSON.stringify(calculatedCosts));
+
+    calculateDeliveryCosts();
   };
   
   const handleEditAddress = () => {

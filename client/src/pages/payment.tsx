@@ -143,16 +143,44 @@ export default function Payment() {
               <div className="border-t pt-3 mt-3">
                 <h4 className="font-medium text-neutral-800 mb-2">Detalhamento</h4>
                 
-                {pricingBreakdown.map((item, index) => (
-                  <div key={index} className={`flex justify-between items-center ${item.isTotal ? 'border-t pt-2 mt-3' : 'mb-1'}`}>
-                    <span className={item.isTotal ? 'font-semibold text-lg text-neutral-800' : 'text-neutral-600'}>
-                      {item.label}
-                    </span>
-                    <span className={item.isTotal ? 'font-bold text-xl text-primary' : 'font-medium text-neutral-800'}>
-                      {formatCurrency(item.value)}
-                    </span>
+                {pricing.fixedPrice ? (
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="flex items-center">
+                      <Badge variant="secondary" className="mr-2 text-xs">Preço Fixo</Badge>
+                      <span className="text-neutral-600">Inclui todos os serviços</span>
+                    </div>
+                    <span className="font-medium text-neutral-800">{formatCurrency(pricing.fixedPrice)}</span>
                   </div>
-                ))}
+                ) : (
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-neutral-600">Entrega ({calculatedCosts.distance || 12.5} km)</span>
+                    <span className="font-medium text-neutral-800">{formatCurrency(pricing.deliveryCost)}</span>
+                  </div>
+                )}
+                
+                {pricing.extraKitsCost > 0 && (
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-neutral-600">{kitData.kitQuantity - 1} kit{kitData.kitQuantity > 2 ? 's' : ''} adicional{kitData.kitQuantity > 2 ? 'is' : ''}</span>
+                    <span className="font-medium text-neutral-800">{formatCurrency(pricing.extraKitsCost)}</span>
+                  </div>
+                )}
+                
+                {pricing.donationAmount > 0 && (
+                  <div className="flex justify-between items-center mb-1">
+                    <div className="flex items-center">
+                      <Heart className="w-3 h-3 text-red-500 mr-1" />
+                      <span className="text-neutral-600">Doação: {event.donationDescription} ({kitData.kitQuantity}x)</span>
+                    </div>
+                    <span className="font-medium text-neutral-800">{formatCurrency(pricing.donationAmount)}</span>
+                  </div>
+                )}
+                
+                <div className="border-t pt-2 mt-3">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-lg text-neutral-800">Total</span>
+                    <span className="font-bold text-xl text-primary">{formatCurrency(pricing.totalCost)}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>

@@ -174,6 +174,16 @@ Preferred communication style: Simple, everyday language.
 - ✓ Fixed event details page participants field error
 - ✓ Implemented AdminLayout component for consistent admin interface
 
+### Delivery Cost Calculation Implementation (January 2025)
+- ✓ Implemented proper delivery cost calculation based on ZIP code distance
+- ✓ Created distance calculator utility with Haversine formula
+- ✓ Fixed pricing display to separate fixed_price from delivery costs
+- ✓ Updated all order flow pages to show correct delivery pricing
+- ✓ Added pickup_zip_code field to events table for distance calculation
+- ✓ Enhanced pricing breakdown in kit information, payment, and confirmation pages
+- ✓ Corrected pricing logic to properly handle fixed vs variable pricing models
+- ✓ Added real-time delivery cost calculation in address selection
+
 ### Authentication System Implementation (January 2025)
 - ✓ Added persistent login system with localStorage for session management
 - ✓ Created comprehensive profile page with user data and address management

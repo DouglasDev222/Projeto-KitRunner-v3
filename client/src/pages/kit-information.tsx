@@ -64,6 +64,7 @@ export default function KitInformation() {
 
   // Calculate costs using unified pricing logic
   const deliveryPrice = calculatedCosts.deliveryPrice || 18.50;
+  const distance = calculatedCosts.distance || 12.5;
   const pricing = event ? calculatePricing({
     event,
     kitQuantity: selectedQuantity,
@@ -182,16 +183,44 @@ export default function KitInformation() {
               <CardContent className="p-4">
                 <h3 className="font-semibold text-lg text-neutral-800 mb-3">Resumo do Pedido</h3>
                 <div className="space-y-2">
-                  {pricing && formatPricingBreakdown(pricing, event, selectedQuantity).map((item, index) => (
-                    <div key={index} className={`flex justify-between items-center ${item.isTotal ? 'border-t pt-3 font-semibold text-lg' : ''}`}>
-                      <span className={item.isTotal ? 'text-neutral-800' : 'text-neutral-600'}>
-                        {item.label}
-                      </span>
-                      <span className={item.isTotal ? 'font-bold text-xl text-primary' : 'font-semibold text-neutral-800'}>
-                        {formatCurrency(item.value)}
-                      </span>
+                  {pricing?.fixedPrice ? (
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center">
+                        <Badge variant="secondary" className="mr-2 text-xs">Preço Fixo</Badge>
+                        <span className="text-neutral-600">Inclui todos os serviços</span>
+                      </div>
+                      <span className="font-semibold text-neutral-800">{formatCurrency(pricing.fixedPrice)}</span>
                     </div>
-                  ))}
+                  ) : (
+                    <div className="flex justify-between items-center">
+                      <span className="text-neutral-600">Entrega ({distance.toFixed(1)} km)</span>
+                      <span className="font-semibold text-neutral-800">{formatCurrency(deliveryPrice)}</span>
+                    </div>
+                  )}
+                  
+                  {event?.donationRequired && (
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center">
+                        <Heart className="w-3 h-3 text-red-500 mr-1" />
+                        <span className="text-neutral-600">Doação: {event.donationDescription} ({selectedQuantity}x)</span>
+                      </div>
+                      <span className="font-semibold text-neutral-800">{formatCurrency(Number(event.donationAmount || 0) * selectedQuantity)}</span>
+                    </div>
+                  )}
+                  
+                  {selectedQuantity > 1 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-neutral-600">{selectedQuantity - 1} kit{selectedQuantity > 2 ? 's' : ''} adicional{selectedQuantity > 2 ? 'is' : ''}</span>
+                      <span className="font-semibold text-neutral-800">{formatCurrency((selectedQuantity - 1) * Number(event?.extraKitPrice || 8))}</span>
+                    </div>
+                  )}
+                  
+                  <div className="border-t pt-3">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-lg text-neutral-800">Total</span>
+                      <span className="font-bold text-xl text-primary">{formatCurrency(pricing?.totalCost || 0)}</span>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
