@@ -176,6 +176,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       if (event.fixedPrice) {
         baseCost = Number(event.fixedPrice);
+        deliveryCost = 0; // Included in fixed price
       } else {
         // Calculate delivery cost based on distance - simplified for now
         deliveryCost = 18.50; // Default delivery cost

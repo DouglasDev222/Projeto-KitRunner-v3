@@ -142,6 +142,9 @@ Preferred communication style: Simple, everyday language.
 - ✓ Enhanced pricing breakdown to show accurate costs in all order stages
 - ✓ Applied Brazilian CPF validation formula with check digit verification
 - ✓ Ensured all pricing logic handles fixed prices and distance-based calculations consistently
+- ✓ Created unified pricing calculator module for consistent calculations across all pages
+- ✓ Updated order details page with complete pricing breakdown including donations and extra kits
+- ✓ Fixed all pricing discrepancies between kit information, payment, confirmation and order details pages
 
 ## Recent Changes
 

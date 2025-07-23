@@ -2,11 +2,12 @@ import { Header } from "@/components/header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Package, Calendar, MapPin, User, CreditCard } from "lucide-react";
+import { Package, Calendar, MapPin, User, CreditCard, Heart } from "lucide-react";
 import { useLocation, useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { formatCurrency, formatDate } from "@/lib/brazilian-formatter";
 import { formatCPF } from "@/lib/cpf-validator";
+import { calculatePricing, formatPricingBreakdown } from "@/lib/pricing-calculator";
 import type { Order, Kit, Address, Event } from "@shared/schema";
 
 export default function OrderDetails() {
@@ -159,24 +160,43 @@ export default function OrderDetails() {
           <CardHeader>
             <CardTitle className="text-lg flex items-center">
               <CreditCard className="w-5 h-5 mr-2" />
-              Pagamento
+              Detalhamento do Pagamento
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-neutral-600">Valor base:</span>
-                <span className="text-neutral-800">{formatCurrency(parseFloat(order.baseCost))}</span>
+                <span className="text-neutral-600">Entrega:</span>
+                <span className="text-neutral-800">{formatCurrency(parseFloat(order.deliveryCost))}</span>
               </div>
-              {parseFloat(order.additionalCost) > 0 && (
+              
+              {parseFloat(order.extraKitsCost) > 0 && (
                 <div className="flex justify-between items-center">
-                  <span className="text-neutral-600">Taxa adicional:</span>
-                  <span className="text-neutral-800">{formatCurrency(parseFloat(order.additionalCost))}</span>
+                  <span className="text-neutral-600">Kits adicionais:</span>
+                  <span className="text-neutral-800">{formatCurrency(parseFloat(order.extraKitsCost))}</span>
                 </div>
               )}
+              
+              {parseFloat(order.donationAmount) > 0 && (
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <Heart className="w-3 h-3 text-red-500 mr-1" />
+                    <span className="text-neutral-600">Doação:</span>
+                  </div>
+                  <span className="text-neutral-800">{formatCurrency(parseFloat(order.donationAmount))}</span>
+                </div>
+              )}
+              
+              {parseFloat(order.discountAmount) > 0 && (
+                <div className="flex justify-between items-center">
+                  <span className="text-neutral-600">Desconto:</span>
+                  <span className="text-green-600">-{formatCurrency(parseFloat(order.discountAmount))}</span>
+                </div>
+              )}
+              
               <Separator />
               <div className="flex justify-between items-center">
-                <span className="font-semibold text-neutral-800">Total:</span>
+                <span className="font-semibold text-neutral-800">Total Pago:</span>
                 <span className="font-bold text-primary text-lg">
                   {formatCurrency(parseFloat(order.totalCost))}
                 </span>
