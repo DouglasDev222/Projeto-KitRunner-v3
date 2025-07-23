@@ -132,6 +132,19 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### Migration to Replit & CPF Validation + Pricing Fixes (January 2025)
+- ✓ Successfully migrated project from Replit Agent to Replit environment
+- ✓ Set up PostgreSQL database with all required tables and relationships
+- ✓ Implemented proper CPF validation algorithm in all forms (registration, identification, kit information)
+- ✓ Fixed pricing consistency across all order flow pages (partial-cost, kit-information, payment, confirmation)
+- ✓ Corrected donation amount calculation to multiply by kit quantity as required
+- ✓ Unified delivery cost calculations between client and server
+- ✓ Enhanced pricing breakdown to show accurate costs in all order stages
+- ✓ Applied Brazilian CPF validation formula with check digit verification
+- ✓ Ensured all pricing logic handles fixed prices and distance-based calculations consistently
+
+## Recent Changes
+
 ### Pricing Structure Overhaul & Data Consistency (January 2025)
 - ✓ Complete pricing structure overhaul - removed pickup base costs (R$ 15.00) from all calculations
 - ✓ Updated server-side pricing logic to use delivery costs instead of pickup costs

@@ -118,7 +118,33 @@ export const insertCouponSchema = createInsertSchema(coupons).omit({
 });
 
 export const customerIdentificationSchema = z.object({
-  cpf: z.string().length(11, "CPF deve ter 11 dígitos numéricos"),
+  cpf: z.string().length(11, "CPF deve ter 11 dígitos numéricos").refine((cpf) => {
+    // CPF validation algorithm
+    if (cpf.length !== 11) return false;
+    
+    // Check if all digits are the same
+    if (/^(\d)\1{10}$/.test(cpf)) return false;
+    
+    // Validate first check digit
+    let sum = 0;
+    for (let i = 0; i < 9; i++) {
+      sum += parseInt(cpf.charAt(i)) * (10 - i);
+    }
+    let remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cpf.charAt(9))) return false;
+    
+    // Validate second check digit
+    sum = 0;
+    for (let i = 0; i < 10; i++) {
+      sum += parseInt(cpf.charAt(i)) * (11 - i);
+    }
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cpf.charAt(10))) return false;
+    
+    return true;
+  }, "CPF inválido"),
   birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Data de nascimento deve estar no formato YYYY-MM-DD"),
 });
 
@@ -136,7 +162,33 @@ export const addressSchema = z.object({
 
 export const customerRegistrationSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
-  cpf: z.string().length(11, "CPF deve ter 11 dígitos numéricos"),
+  cpf: z.string().length(11, "CPF deve ter 11 dígitos numéricos").refine((cpf) => {
+    // CPF validation algorithm
+    if (cpf.length !== 11) return false;
+    
+    // Check if all digits are the same
+    if (/^(\d)\1{10}$/.test(cpf)) return false;
+    
+    // Validate first check digit
+    let sum = 0;
+    for (let i = 0; i < 9; i++) {
+      sum += parseInt(cpf.charAt(i)) * (10 - i);
+    }
+    let remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cpf.charAt(9))) return false;
+    
+    // Validate second check digit
+    sum = 0;
+    for (let i = 0; i < 10; i++) {
+      sum += parseInt(cpf.charAt(i)) * (11 - i);
+    }
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cpf.charAt(10))) return false;
+    
+    return true;
+  }, "CPF inválido"),
   birthDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Data de nascimento deve estar no formato YYYY-MM-DD"),
   email: z.string().email("Email inválido"),
   phone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos"),
@@ -145,7 +197,33 @@ export const customerRegistrationSchema = z.object({
 
 export const kitInformationSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
-  cpf: z.string().length(11, "CPF deve ter 11 dígitos numéricos"),
+  cpf: z.string().length(11, "CPF deve ter 11 dígitos numéricos").refine((cpf) => {
+    // CPF validation algorithm
+    if (cpf.length !== 11) return false;
+    
+    // Check if all digits are the same
+    if (/^(\d)\1{10}$/.test(cpf)) return false;
+    
+    // Validate first check digit
+    let sum = 0;
+    for (let i = 0; i < 9; i++) {
+      sum += parseInt(cpf.charAt(i)) * (10 - i);
+    }
+    let remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cpf.charAt(9))) return false;
+    
+    // Validate second check digit
+    sum = 0;
+    for (let i = 0; i < 10; i++) {
+      sum += parseInt(cpf.charAt(i)) * (11 - i);
+    }
+    remainder = (sum * 10) % 11;
+    if (remainder === 10 || remainder === 11) remainder = 0;
+    if (remainder !== parseInt(cpf.charAt(10))) return false;
+    
+    return true;
+  }, "CPF inválido"),
   shirtSize: z.string().min(1, "Tamanho da camiseta é obrigatório"),
 });
 

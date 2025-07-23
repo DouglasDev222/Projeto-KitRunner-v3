@@ -187,7 +187,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       if (event.donationRequired && event.donationAmount) {
-        donationAmount = Number(event.donationAmount);
+        donationAmount = Number(event.donationAmount) * kitQuantity;
       }
 
       totalCost = baseCost + additionalKitCost + donationAmount;
@@ -238,7 +238,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       if (selectedEvent.donationRequired && selectedEvent.donationAmount) {
-        donationAmount = Number(selectedEvent.donationAmount);
+        donationAmount = Number(selectedEvent.donationAmount) * orderData.kitQuantity;
       }
 
       totalCost = baseCost + additionalCost + donationAmount;
@@ -411,9 +411,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Convert string prices to proper format
       const eventData = {
         ...validatedData,
-        fixedPrice: validatedData.fixedPrice ? parseFloat(validatedData.fixedPrice) : null,
-        extraKitPrice: validatedData.extraKitPrice ? parseFloat(validatedData.extraKitPrice) : parseFloat("8.00"),
-        donationAmount: validatedData.donationAmount ? parseFloat(validatedData.donationAmount) : null,
+        fixedPrice: validatedData.fixedPrice ? validatedData.fixedPrice : null,
+        extraKitPrice: validatedData.extraKitPrice ? validatedData.extraKitPrice : "8.00",
+        donationAmount: validatedData.donationAmount ? validatedData.donationAmount : null,
       };
 
       const event = await storage.createEvent(eventData);

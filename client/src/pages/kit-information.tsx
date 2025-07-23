@@ -62,10 +62,11 @@ export default function KitInformation() {
   const calculatedCosts = JSON.parse(sessionStorage.getItem("calculatedCosts") || "{}");
 
   // Calculate costs
-  const baseCost = event?.fixedPrice ? Number(event.fixedPrice) : calculatedCosts.totalCost || 18.50;
+  const deliveryCost = calculatedCosts.deliveryPrice || 18.50;
+  const baseCost = event?.fixedPrice ? Number(event.fixedPrice) : deliveryCost;
   const additionalKitCost = Number(event?.extraKitPrice || 8.00);
   const extraKits = Math.max(0, selectedQuantity - 1);
-  const donationAmount = event?.donationRequired ? Number(event.donationAmount || 0) : 0;
+  const donationAmount = event?.donationRequired ? Number(event.donationAmount || 0) * selectedQuantity : 0;
   const totalCost = baseCost + (extraKits * additionalKitCost) + donationAmount;
 
   const onSubmit = (data: KitFormData) => {

@@ -35,6 +35,7 @@ export default function PartialCost() {
   const donationValue = event?.donationAmount ? Number(event.donationAmount) : 0;
   
   // Calculate total considering fixed price or individual components
+  // Note: At this stage we don't know kit quantity yet, so donation is shown per kit
   const totalCost = fixedPrice || (deliveryCost + donationValue);
 
   const handleContinue = () => {

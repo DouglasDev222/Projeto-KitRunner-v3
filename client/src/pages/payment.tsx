@@ -85,15 +85,15 @@ export default function Payment() {
   
   const deliveryCost = calculatedCosts.deliveryPrice || 18.50;
   const extraKitPrice = Number(event.extraKitPrice || 8);
-  const donationValue = event?.donationAmount ? Number(event.donationAmount) : 0;
+  const donationValue = event?.donationAmount ? Number(event.donationAmount) * kitData.kitQuantity : 0;
   const fixedPrice = event?.fixedPrice ? Number(event.fixedPrice) : null;
   
   const extraKits = Math.max(0, kitData.kitQuantity - 1);
   const extraKitsCost = extraKits * extraKitPrice;
   
   // Calculate total based on event pricing model
-  const baseCost = fixedPrice || (deliveryCost + donationValue);
-  const totalCost = baseCost + extraKitsCost;
+  const baseCost = fixedPrice || deliveryCost;
+  const totalCost = baseCost + extraKitsCost + donationValue;
 
   const handleFinishOrder = () => {
     if (!selectedAddress) {
