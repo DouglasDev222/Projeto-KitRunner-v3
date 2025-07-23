@@ -32,15 +32,16 @@ export function calculatePricing({
   const fixedPrice = event.fixedPrice ? Number(event.fixedPrice) : null;
 
   if (fixedPrice) {
-    // Fixed price event - all services included
+    // Fixed price event - includes all services, no separate delivery cost
     baseCost = fixedPrice;
+    deliveryCost = 0; // Included in fixed price
   } else {
-    // Variable pricing - delivery cost based
+    // Variable pricing - separate delivery cost calculation
     deliveryCost = deliveryPrice;
-    baseCost = deliveryCost;
+    baseCost = 0; // No base cost, only delivery
   }
 
-  // Calculate extra kits cost (first kit is included in base cost)
+  // Calculate extra kits cost (first kit is included in base cost or delivery)
   if (kitQuantity > 1 && event.extraKitPrice) {
     extraKitsCost = (kitQuantity - 1) * Number(event.extraKitPrice);
   }
@@ -51,7 +52,7 @@ export function calculatePricing({
   }
 
   // Calculate total
-  totalCost = baseCost + extraKitsCost + donationAmount - discountAmount;
+  totalCost = baseCost + deliveryCost + extraKitsCost + donationAmount - discountAmount;
 
   return {
     deliveryCost,
@@ -77,8 +78,9 @@ export function formatPricingBreakdown(pricing: PricingBreakdown, event: Event, 
       value: pricing.fixedPrice
     });
   } else {
+    // Show delivery cost separately for variable pricing
     breakdown.push({
-      label: "Entrega",
+      label: "Entrega (baseada na distância)",
       value: pricing.deliveryCost
     });
   }

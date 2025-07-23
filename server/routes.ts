@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { customerIdentificationSchema, customerRegistrationSchema, orderCreationSchema, adminEventCreationSchema } from "@shared/schema";
 import { z } from "zod";
+import { calculateDeliveryCost } from "./distance-calculator";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all events
@@ -159,7 +160,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Calculate delivery cost
   app.post("/api/delivery/calculate", async (req, res) => {
     try {
-      const { customerId, eventId, kitQuantity } = req.body;
+      const { customerId, eventId, kitQuantity, customerZipCode } = req.body;
       
       const event = await storage.getEvent(eventId);
       
@@ -171,16 +172,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let baseCost = 0;
       let additionalKitCost = 0;
       let donationAmount = 0;
-
       let deliveryCost = 0;
+      let distance = 0;
       
       if (event.fixedPrice) {
         baseCost = Number(event.fixedPrice);
         deliveryCost = 0; // Included in fixed price
+        distance = 0;
       } else {
-        // Calculate delivery cost based on distance - simplified for now
-        deliveryCost = 18.50; // Default delivery cost
-        baseCost = deliveryCost;
+        // Calculate delivery cost based on actual distance
+        const deliveryCalculation = calculateDeliveryCost(
+          event.pickupZipCode || '58000000', // Event pickup ZIP
+          customerZipCode || '58030000' // Customer ZIP
+        );
+        
+        deliveryCost = deliveryCalculation.deliveryCost;
+        distance = deliveryCalculation.distance;
+        baseCost = 0; // No base cost, only delivery
       }
 
       if (kitQuantity > 1 && event.extraKitPrice) {
@@ -191,7 +199,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         donationAmount = Number(event.donationAmount) * kitQuantity;
       }
 
-      totalCost = baseCost + additionalKitCost + donationAmount;
+      totalCost = baseCost + deliveryCost + additionalKitCost + donationAmount;
       
       res.json({
         baseCost,
@@ -199,11 +207,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         additionalKitCost,
         donationAmount,
         totalCost,
+        distance,
         breakdown: {
           delivery: deliveryCost,
           additionalKits: additionalKitCost,
           donation: donationAmount,
-          fixedPrice: event.fixedPrice ? Number(event.fixedPrice) : null
+          fixedPrice: event.fixedPrice ? Number(event.fixedPrice) : null,
+          distance
         }
       });
     } catch (error) {
@@ -226,12 +236,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let additionalCost = 0;
       let donationAmount = 0;
 
+      // Get customer address for delivery calculation
+      const customerAddress = await storage.getAddress(orderData.addressId);
+      
       if (selectedEvent.fixedPrice) {
         baseCost = Number(selectedEvent.fixedPrice);
+        deliveryCost = 0; // Included in fixed price
       } else {
-        // Calculate delivery cost based on distance - simplified for now  
-        deliveryCost = 18.50; // Default delivery cost
-        baseCost = deliveryCost;
+        // Calculate delivery cost based on actual distance
+        const deliveryCalculation = calculateDeliveryCost(
+          selectedEvent.pickupZipCode || '58000000', // Event pickup ZIP
+          customerAddress?.zipCode || '58030000' // Customer ZIP
+        );
+        
+        deliveryCost = deliveryCalculation.deliveryCost;
+        baseCost = 0; // No base cost for variable pricing
       }
 
       if (orderData.kitQuantity > 1 && selectedEvent.extraKitPrice) {
@@ -242,15 +261,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         donationAmount = Number(selectedEvent.donationAmount) * orderData.kitQuantity;
       }
 
-      totalCost = baseCost + additionalCost + donationAmount;
+      totalCost = baseCost + deliveryCost + additionalCost + donationAmount;
       
-      // Create order
+      // Create order with proper pricing breakdown
       const order = await storage.createOrder({
         eventId: orderData.eventId,
         customerId: orderData.customerId,
         addressId: orderData.addressId,
         kitQuantity: orderData.kitQuantity,
-        deliveryCost: baseCost.toString(),
+        deliveryCost: deliveryCost.toString(),
         extraKitsCost: additionalCost.toString(),
         donationCost: donationAmount.toString(),
         discountAmount: "0",

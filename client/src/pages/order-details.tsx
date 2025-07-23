@@ -165,10 +165,21 @@ export default function OrderDetails() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-neutral-600">Entrega:</span>
-                <span className="text-neutral-800">{formatCurrency(parseFloat(order.deliveryCost))}</span>
-              </div>
+              {/* Show delivery cost if exists (variable pricing) */}
+              {parseFloat(order.deliveryCost) > 0 && (
+                <div className="flex justify-between items-center">
+                  <span className="text-neutral-600">Entrega (baseada na distância):</span>
+                  <span className="text-neutral-800">{formatCurrency(parseFloat(order.deliveryCost))}</span>
+                </div>
+              )}
+              
+              {/* Show fixed price if exists */}
+              {order.event?.fixedPrice && (
+                <div className="flex justify-between items-center">
+                  <span className="text-neutral-600">Preço Fixo (inclui todos os serviços):</span>
+                  <span className="text-neutral-800">{formatCurrency(parseFloat(order.event.fixedPrice))}</span>
+                </div>
+              )}
               
               {parseFloat(order.extraKitsCost) > 0 && (
                 <div className="flex justify-between items-center">
