@@ -73,7 +73,7 @@ export default function Payment() {
   if (!customer || !kitData || !event) {
     return (
       <div className="max-w-md mx-auto bg-white min-h-screen">
-        <Header showBackButton />
+        <Header showBackButton onBack={() => setLocation(`/events/${id}/kits`)} />
         <div className="p-4">
           <p className="text-center text-neutral-600">Carregando...</p>
         </div>
@@ -114,7 +114,7 @@ export default function Payment() {
 
   return (
     <div className="max-w-md mx-auto bg-white min-h-screen">
-      <Header showBackButton />
+      <Header showBackButton onBack={() => setLocation(`/events/${id}/kits`)} />
       <div className="p-4">
         <h2 className="text-2xl font-bold text-neutral-800 mb-2">Pagamento</h2>
         <p className="text-neutral-600 mb-6">Finalize seu pedido escolhendo a forma de pagamento</p>

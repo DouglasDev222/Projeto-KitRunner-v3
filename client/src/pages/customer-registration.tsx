@@ -98,7 +98,7 @@ export default function CustomerRegistration() {
 
   return (
     <div className="max-w-md mx-auto bg-white min-h-screen">
-      <Header showBackButton />
+      <Header showBackButton onBack={() => setLocation(`/events/${id}/identify`)} />
       <div className="p-4">
         <div className="flex items-center mb-4">
           <UserPlus className="w-6 h-6 text-primary mr-2" />

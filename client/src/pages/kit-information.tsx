@@ -94,7 +94,7 @@ export default function KitInformation() {
 
   return (
     <div className="max-w-md mx-auto bg-white min-h-screen">
-      <Header showBackButton />
+      <Header showBackButton onBack={() => setLocation(`/events/${id}/cost`)} />
       <div className="p-4">
         <h2 className="text-2xl font-bold text-neutral-800 mb-2">Informações dos Kits</h2>
         <p className="text-neutral-600 mb-6">Informe os dados para cada kit que deseja retirar</p>

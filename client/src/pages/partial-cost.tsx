@@ -46,7 +46,7 @@ export default function PartialCost() {
 
   return (
     <div className="max-w-md mx-auto bg-white min-h-screen">
-      <Header showBackButton />
+      <Header showBackButton onBack={() => setLocation(`/events/${id}/address`)} />
       <div className="p-4">
         <h2 className="text-2xl font-bold text-neutral-800 mb-2">Cálculo do Delivery</h2>
         <p className="text-neutral-600 mb-6">Valor calculado com base no seu endereço</p>
