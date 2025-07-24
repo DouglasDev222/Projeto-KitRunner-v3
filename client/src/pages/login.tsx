@@ -35,14 +35,16 @@ export default function Login() {
     },
     onSuccess: (customer) => {
       login(customer);
-      // Check if there's a return path in session storage
-      const returnPath = sessionStorage.getItem("loginReturnPath");
-      if (returnPath) {
-        sessionStorage.removeItem("loginReturnPath");
-        setLocation(returnPath);
-      } else {
-        setLocation("/profile");
-      }
+      // Use setTimeout to ensure state update completes before navigation
+      setTimeout(() => {
+        const returnPath = sessionStorage.getItem("loginReturnPath");
+        if (returnPath) {
+          sessionStorage.removeItem("loginReturnPath");
+          setLocation(returnPath);
+        } else {
+          setLocation("/profile");
+        }
+      }, 100);
     },
     onError: () => {
       form.setError("root", {

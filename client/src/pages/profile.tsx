@@ -6,11 +6,12 @@ import { Separator } from "@/components/ui/separator";
 import { User, Package, LogOut, MapPin, Edit3, Plus, Home } from "lucide-react";
 import { useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { formatCPF } from "@/lib/cpf-validator";
 import { formatZipCode } from "@/lib/brazilian-formatter";
 import type { Address } from "@shared/schema";
-import Login from "./login";
+
 
 export default function Profile() {
   const [, setLocation] = useLocation();
@@ -30,9 +31,24 @@ export default function Profile() {
     setLocation("/");
   };
 
-  // If not authenticated, show login form
+  // Use effect to handle redirection to avoid React warning
+  useEffect(() => {
+    if (!isAuthenticated) {
+      sessionStorage.setItem("loginReturnPath", "/profile");
+      setLocation("/login");
+    }
+  }, [isAuthenticated, setLocation]);
+
+  // If not authenticated, show loading while redirecting
   if (!isAuthenticated) {
-    return <Login />;
+    return (
+      <div className="max-w-md mx-auto bg-white min-h-screen">
+        <Header showBackButton onBack={() => setLocation("/")} />
+        <div className="p-4 text-center">
+          <p className="text-neutral-600">Redirecionando para login...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
