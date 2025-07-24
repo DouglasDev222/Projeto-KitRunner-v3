@@ -13,7 +13,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocation, useParams } from "wouter";
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { addressSchema, type AddressData, type Address } from "@shared/schema";
+import { addressSchema, type Address } from "@shared/schema";
+
+type AddressData = {
+  street: string;
+  number: string;
+  complement?: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  label: string;
+  isDefault?: boolean;
+};
 import { Checkbox } from "@/components/ui/checkbox";
 import { formatZipCode } from "@/lib/brazilian-formatter";
 import { apiRequest } from "@/lib/queryClient";
@@ -94,6 +106,9 @@ export default function AddressConfirmation() {
         zipCode: defaultAddress.zipCode,
         label: defaultAddress.label
       });
+      
+      // Automatically calculate delivery costs for the default address
+      handleAddressSelect(defaultAddress);
     }
   }, [addresses, form]);
   

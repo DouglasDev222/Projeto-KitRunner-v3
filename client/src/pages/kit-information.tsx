@@ -71,6 +71,16 @@ export default function KitInformation() {
     deliveryPrice
   }) : null;
 
+  // Debug logging
+  console.log('Kit Information Debug:', {
+    event: event?.name,
+    fixedPrice: event?.fixedPrice,
+    calculatedCosts,
+    deliveryPrice,
+    distance,
+    pricing
+  });
+
   const onSubmit = (data: KitFormData) => {
     // Store kit data in sessionStorage for next steps
     sessionStorage.setItem("kitData", JSON.stringify(data));
