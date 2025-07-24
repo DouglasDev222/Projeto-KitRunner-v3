@@ -18,6 +18,19 @@ import { formatCurrency, formatDate } from "@/lib/brazilian-formatter";
 import { apiRequest } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth-context";
 
+// Status translation function
+const getStatusLabel = (status: string): string => {
+  const statusMap: Record<string, string> = {
+    'confirmed': 'Confirmado',
+    'pending': 'Pendente',
+    'processing': 'Processando',
+    'shipped': 'Enviado',
+    'delivered': 'Entregue',
+    'cancelled': 'Cancelado'
+  };
+  return statusMap[status] || status;
+};
+
 export default function MyOrders() {
   const [, setLocation] = useLocation();
   const { user, isAuthenticated } = useAuth();
@@ -131,7 +144,7 @@ export default function MyOrders() {
                             variant="default" 
                             className="bg-secondary hover:bg-secondary/80"
                           >
-                            {order.status}
+                            {getStatusLabel(order.status)}
                           </Badge>
                         </div>
                         <div className="flex items-center text-sm text-neutral-600 mb-1">

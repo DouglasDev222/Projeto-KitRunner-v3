@@ -10,6 +10,19 @@ import { formatCPF } from "@/lib/cpf-validator";
 import { calculatePricing, formatPricingBreakdown } from "@/lib/pricing-calculator";
 import type { Order, Kit, Address, Event } from "@shared/schema";
 
+// Status translation function
+const getStatusLabel = (status: string): string => {
+  const statusMap: Record<string, string> = {
+    'confirmed': 'Confirmado',
+    'pending': 'Pendente',
+    'processing': 'Processando',
+    'shipped': 'Enviado',
+    'delivered': 'Entregue',
+    'cancelled': 'Cancelado'
+  };
+  return statusMap[status] || status;
+};
+
 export default function OrderDetails() {
   const [, setLocation] = useLocation();
   const { orderNumber } = useParams<{ orderNumber: string }>();
@@ -78,7 +91,7 @@ export default function OrderDetails() {
             variant="default" 
             className="bg-secondary hover:bg-secondary/80"
           >
-            {order.status}
+            {getStatusLabel(order.status)}
           </Badge>
         </div>
 
