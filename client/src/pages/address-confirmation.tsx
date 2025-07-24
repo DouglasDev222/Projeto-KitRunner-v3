@@ -211,7 +211,7 @@ export default function AddressConfirmation() {
   if (!customer) {
     return (
       <div className="max-w-md mx-auto bg-white min-h-screen">
-        <Header showBackButton />
+        <Header showBackButton onBack={() => setLocation(`/events/${id}/identify`)} />
         <div className="p-4">
           <p className="text-center text-neutral-600">Carregando...</p>
         </div>
@@ -222,7 +222,7 @@ export default function AddressConfirmation() {
   if (isLoading) {
     return (
       <div className="max-w-md mx-auto bg-white min-h-screen">
-        <Header showBackButton />
+        <Header showBackButton onBack={() => setLocation(`/events/${id}/identify`)} />
         <div className="p-4">
           <p className="text-center text-neutral-600">Carregando endereços...</p>
         </div>

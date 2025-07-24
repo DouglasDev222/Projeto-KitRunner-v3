@@ -10,7 +10,6 @@ import CustomerIdentification from "@/pages/customer-identification";
 import CustomerRegistration from "@/pages/customer-registration";
 import AddressConfirmation from "@/pages/address-confirmation";
 import NewAddress from "@/pages/new-address";
-import PartialCost from "@/pages/partial-cost";
 import KitInformation from "@/pages/kit-information";
 import Payment from "@/pages/payment";
 import OrderConfirmation from "@/pages/order-confirmation";
@@ -33,7 +32,7 @@ function Router() {
       <Route path="/events/:id/register" component={CustomerRegistration} />
       <Route path="/events/:id/address" component={AddressConfirmation} />
       <Route path="/events/:id/address/new" component={NewAddress} />
-      <Route path="/events/:id/cost" component={PartialCost} />
+
       <Route path="/events/:id/kits" component={KitInformation} />
       <Route path="/events/:id/payment" component={Payment} />
       <Route path="/events/:id/confirmation" component={OrderConfirmation} />

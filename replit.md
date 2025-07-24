@@ -132,6 +132,14 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes
 
+### Order Flow Optimization & Navigation Fixes (January 2025)
+- ✓ Removed /cost page from order flow - users go directly from address confirmation to kit information
+- ✓ Fixed back button navigation throughout entire order flow to navigate to previous page instead of home
+- ✓ Updated order flow: Events → Event Details → Customer Identification → Address Confirmation → Kit Information → Payment → Order Confirmation
+- ✓ Fixed double login issue with proper React state management and authentication timing
+- ✓ Added proper returnPath functionality for login redirection
+- ✓ Enhanced status translation in orders (confirmed → Confirmado)
+
 ### Replit Migration & User Flow Improvements (January 2025)
 - ✓ Successfully migrated from Replit Agent to standard Replit environment
 - ✓ Configured PostgreSQL database with proper schema migration
