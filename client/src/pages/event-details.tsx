@@ -150,10 +150,6 @@ export default function EventDetails() {
             ) : (
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-neutral-600">Taxa base de retirada:</span>
-                  <span className="font-medium">R$ 15,00</span>
-                </div>
-                <div className="flex justify-between text-sm">
                   <span className="text-neutral-600">Entrega (varia por distância):</span>
                   <span className="font-medium">A partir de R$ 10,00</span>
                 </div>
