@@ -112,7 +112,7 @@ export default function EventDetails() {
                 <Clock className="w-5 h-5 text-secondary mr-3 mt-1" />
                 <div>
                   <p className="font-medium text-neutral-800">Prazo de Entrega</p>
-                  <p className="text-neutral-600 text-sm">Até 2 dias úteis após o evento</p>
+                  <p className="text-neutral-600 text-sm">Até o dia anterior do evento</p>
                 </div>
               </div>
               <div className="flex items-start">
