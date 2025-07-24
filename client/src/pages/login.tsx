@@ -28,15 +28,21 @@ export default function Login() {
   const loginMutation = useMutation({
     mutationFn: async (data: CustomerIdentification) => {
       const response = await apiRequest("POST", "/api/customers/identify", data);
+      if (!response.ok) {
+        throw new Error("Customer not found");
+      }
       return response.json();
     },
     onSuccess: (customer) => {
       login(customer);
-      setLocation("/profile");
+      // Check if there's a return path in the URL or session storage
+      const returnPath = sessionStorage.getItem("loginReturnPath") || "/profile";
+      sessionStorage.removeItem("loginReturnPath");
+      setLocation(returnPath);
     },
     onError: () => {
       form.setError("root", {
-        message: "CPF ou data de nascimento incorretos. Verifique os dados ou cadastre-se.",
+        message: "CPF não encontrado ou data de nascimento incorreta.",
       });
     },
   });
@@ -53,6 +59,15 @@ export default function Login() {
   const handleRegister = () => {
     // Clear form and go to events to start registration flow
     setLocation("/");
+  };
+
+  const handleCreateAccount = () => {
+    // Use the current CPF value if available for registration
+    const currentCpf = form.getValues("cpf");
+    if (currentCpf) {
+      sessionStorage.setItem("registrationCpf", currentCpf);
+    }
+    setLocation("/events");
   };
 
   return (
@@ -113,8 +128,20 @@ export default function Login() {
                 />
 
                 {form.formState.errors.root && (
-                  <div className="text-red-500 text-sm text-center">
+                  <div className="text-red-500 text-sm text-center mb-4">
                     {form.formState.errors.root.message}
+                    <div className="mt-2">
+                      <Button 
+                        type="button"
+                        variant="outline" 
+                        size="sm"
+                        className="w-full"
+                        onClick={handleCreateAccount}
+                      >
+                        <User className="w-4 h-4 mr-2" />
+                        Criar Conta com este CPF
+                      </Button>
+                    </div>
                   </div>
                 )}
 

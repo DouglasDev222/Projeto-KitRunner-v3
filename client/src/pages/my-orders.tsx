@@ -24,6 +24,12 @@ export default function MyOrders() {
   const [customer, setCustomer] = useState(null);
   const [showOrders, setShowOrders] = useState(false);
 
+  // If user is not authenticated, redirect to login
+  if (!isAuthenticated && !showOrders && !customer) {
+    setLocation("/login");
+    return null;
+  }
+
   // If user is authenticated, use that, otherwise require login
   const effectiveCustomer = user || customer;
 
@@ -38,7 +44,7 @@ export default function MyOrders() {
   const { data: orders, isLoading: ordersLoading } = useQuery({
     queryKey: ["orders", effectiveCustomer?.id],
     queryFn: async () => {
-      const response = await fetch(`/api/customers/${effectiveCustomer.id}/orders`);
+      const response = await fetch(`/api/customers/${effectiveCustomer!.id}/orders`);
       return response.json();
     },
     enabled: !!effectiveCustomer?.id && (isAuthenticated || showOrders),
@@ -82,8 +88,8 @@ export default function MyOrders() {
           <div className="flex items-center mb-6">
             <User className="w-6 h-6 text-primary mr-2" />
             <div>
-              <h2 className="text-xl font-bold text-neutral-800">{effectiveCustomer.name}</h2>
-              <p className="text-sm text-neutral-600">{formatCPF(effectiveCustomer.cpf)}</p>
+              <h2 className="text-xl font-bold text-neutral-800">{effectiveCustomer!.name}</h2>
+              <p className="text-sm text-neutral-600">{formatCPF(effectiveCustomer!.cpf)}</p>
             </div>
           </div>
 
@@ -121,7 +127,7 @@ export default function MyOrders() {
                         </div>
                         <div className="flex items-center text-sm text-neutral-600 mb-2">
                           <Calendar className="w-4 h-4 mr-2" />
-                          {formatDate(order.createdAt.split('T')[0])}
+                          {formatDate(typeof order.createdAt === 'string' ? order.createdAt.split('T')[0] : order.createdAt.toISOString().split('T')[0])}
                         </div>
                         <p className="text-lg font-bold text-primary">
                           {formatCurrency(parseFloat(order.totalCost))}

@@ -11,7 +11,10 @@ export function Footer() {
         <Button
           variant="outline"
           className="flex-1 flex items-center gap-2"
-          onClick={() => setLocation("/my-orders")}
+          onClick={() => {
+            sessionStorage.setItem("loginReturnPath", "/my-orders");
+            setLocation("/my-orders");
+          }}
         >
           <Package className="w-4 h-4" />
           Meus Pedidos
